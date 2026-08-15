@@ -15,22 +15,23 @@ concurrency:
   cancel-in-progress: false
 
 env:
-  HUGO_VERSION: 0.163.3
+  HUGO_VERSION: 0.165.0
 
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Install Hugo
-        run: |
-          wget -O ${{ runner.temp }}/hugo.deb \
-            https://github.com/gohugoio/hugo/releases/download/v${HUGO_VERSION}/hugo_extended_${HUGO_VERSION}_linux-amd64.deb
-          sudo dpkg -i ${{ runner.temp }}/hugo.deb
-
       - uses: actions/checkout@v4
         with:
           submodules: recursive
           fetch-depth: 0
+
+      - name: Install Hugo
+        run: |
+          wget -q -O ${{ runner.temp }}/hugo.deb \
+            https://github.com/gohugoio/hugo/releases/download/v${HUGO_VERSION}/hugo_extended_${HUGO_VERSION}_linux-amd64.deb
+          sudo dpkg -i ${{ runner.temp }}/hugo.deb
+          hugo version
 
       - uses: actions/configure-pages@v5
         id: pages
@@ -40,6 +41,11 @@ jobs:
           HUGO_ENVIRONMENT: production
         run: |
           hugo --gc --minify --cleanDestinationDir --baseURL "${{ steps.pages.outputs.base_url }}/"
+
+      - name: Verify build output
+        run: |
+          test -f ./public/index.html || { echo "::error::hugo produced no index.html"; exit 1; }
+          echo "built $(find ./public -type f | wc -l) files"
 
       - uses: actions/upload-pages-artifact@v3
         with:
