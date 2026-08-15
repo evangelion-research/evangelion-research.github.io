@@ -1,0 +1,31 @@
+{{ define "main" }}
+<article class="site-shell home-article">
+  <header class="page-header">
+    {{ with site.Params.kicker }}<p class="kicker">{{ . }}</p>{{ end }}
+    <h1>{{ .Title }}</h1>
+    {{ with .Params.subtitle }}<p class="subtitle">{{ . }}</p>{{ end }}
+  </header>
+
+  <div class="content">
+    {{ .Content }}
+  </div>
+
+  <section class="latest-notes" aria-labelledby="latest-notes-title">
+    <h2 id="latest-notes-title">Latest Research Notes</h2>
+    {{ $notes := first 5 (where site.RegularPages "Section" "notes") }}
+    {{ if $notes }}
+      <ol class="post-list">
+        {{ range $notes }}
+          <li>
+            <a href="{{ .RelPermalink }}">{{ .Title }}</a>
+            <span>{{ .Date.Format "2 Jan 2006" }}</span>
+            {{ with .Params.excerpt }}<p>{{ . }}</p>{{ else }}<p>{{ .Summary }}</p>{{ end }}
+          </li>
+        {{ end }}
+      </ol>
+    {{ else }}
+      <p>No notes published yet.</p>
+    {{ end }}
+  </section>
+</article>
+{{ end }}

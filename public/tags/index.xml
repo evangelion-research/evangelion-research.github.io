@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+	<channel>
+		<title>Tags on Repurtum Research Lab</title>
+		<link>http://localhost:1313/tags/</link>
+		<description>Recent content in Tags on Repurtum Research Lab</description>
+		<generator>Hugo</generator>
+		<language>en-US</language>
+		
+		
+		
+		
+			<lastBuildDate>Thu, 25 Jun 2026 00:00:00 +0000</lastBuildDate>
+		
+			<atom:link href="http://localhost:1313/tags/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>Agentic Repair</title>
+				<link>http://localhost:1313/tags/agentic-repair/</link>
+				<pubDate>Thu, 25 Jun 2026 00:00:00 +0000</pubDate>
+				<guid>http://localhost:1313/tags/agentic-repair/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>Go</title>
+				<link>http://localhost:1313/tags/go/</link>
+				<pubDate>Thu, 25 Jun 2026 00:00:00 +0000</pubDate>
+				<guid>http://localhost:1313/tags/go/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>Interpreters</title>
+				<link>http://localhost:1313/tags/interpreters/</link>
+				<pubDate>Thu, 25 Jun 2026 00:00:00 +0000</pubDate>
+				<guid>http://localhost:1313/tags/interpreters/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>Lox</title>
+				<link>http://localhost:1313/tags/lox/</link>
+				<pubDate>Thu, 25 Jun 2026 00:00:00 +0000</pubDate>
+				<guid>http://localhost:1313/tags/lox/</guid>
+				<description></description>
+			</item>
+	</channel>
+</rss>

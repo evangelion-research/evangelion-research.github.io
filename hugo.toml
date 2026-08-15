@@ -1,0 +1,31 @@
+baseURL = "https://repurtum.github.io/"
+locale = "en-US"
+title = "Repurtum Research Lab"
+
+enableRobotsTXT = true
+summaryLength = 32
+
+[params]
+  description = "Research notes on interpreters, agentic repair loops, and self-pairing software systems."
+  kicker = "Repurtum Research Lab"
+  footer = "Research notes on interpreters, agents, and feedback loops."
+
+[markup]
+  [markup.highlight]
+    noClasses = false
+  [markup.goldmark]
+    [markup.goldmark.renderer]
+      unsafe = true
+
+[permalinks]
+  notes = "/notes/:slug/"
+
+[menu]
+  [[menu.main]]
+    name = "Notes"
+    pageRef = "/notes"
+    weight = 10
+  [[menu.main]]
+    name = "About"
+    pageRef = "/about"
+    weight = 20

@@ -1,0 +1,25 @@
+{{ define "main" }}
+<article class="site-shell">
+  <header class="page-header">
+    <p class="kicker">{{ site.Params.kicker }}</p>
+    <h1>{{ .Title }}</h1>
+    {{ with .Params.description }}<p class="subtitle">{{ . }}</p>{{ end }}
+  </header>
+
+  <div class="content">
+    {{ .Content }}
+  </div>
+
+  {{ if .Pages }}
+    <ol class="post-list">
+      {{ range .Pages.ByDate.Reverse }}
+        <li>
+          <a href="{{ .RelPermalink }}">{{ .Title }}</a>
+          <span>{{ .Date.Format "2 Jan 2006" }}</span>
+          {{ with .Params.excerpt }}<p>{{ . }}</p>{{ else }}<p>{{ .Summary }}</p>{{ end }}
+        </li>
+      {{ end }}
+    </ol>
+  {{ end }}
+</article>
+{{ end }}

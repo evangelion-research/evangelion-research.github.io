@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+	<channel>
+		<title>Lox on Repurtum Research Lab</title>
+		<link>http://localhost:1313/tags/lox/</link>
+		<description>Recent content in Lox on Repurtum Research Lab</description>
+		<generator>Hugo</generator>
+		<language>en-US</language>
+		
+		
+		
+		
+			<lastBuildDate>Thu, 25 Jun 2026 00:00:00 +0000</lastBuildDate>
+		
+			<atom:link href="http://localhost:1313/tags/lox/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>Azul: a Lox interpreter that pairs with itself</title>
+				<link>http://localhost:1313/notes/azul/</link>
+				<pubDate>Thu, 25 Jun 2026 00:00:00 +0000</pubDate>
+				<guid>http://localhost:1313/notes/azul/</guid>
+				<description>&lt;h2 id=&#34;the-premise&#34;&gt;The premise&lt;/h2&gt;&#xA;&lt;p&gt;Most interpreters do three things: read your code, run your code, tell you what went wrong. Then they stop. You read the error, fix the file, run it again. The loop between machine and programmer is held together by a human staring at a terminal.&lt;/p&gt;</description>
+			</item>
+	</channel>
+</rss>

@@ -1,0 +1,21 @@
+{{ define "main" }}
+<article class="site-shell research-note">
+  <header class="page-header note-header">
+    <p class="kicker">
+      {{ with .Params.status }}{{ . }} &middot; {{ end }}{{ .Date.Format "2 Jan 2006" }}
+    </p>
+    <h1>{{ .Title }}</h1>
+    {{ with .Params.excerpt }}<p class="subtitle">{{ . }}</p>{{ end }}
+  </header>
+
+  <div class="content">
+    {{ .Content }}
+  </div>
+
+  {{ with .Params.tags }}
+    <footer class="note-tags" aria-label="Tags">
+      {{ range . }}<span>{{ . }}</span>{{ end }}
+    </footer>
+  {{ end }}
+</article>
+{{ end }}

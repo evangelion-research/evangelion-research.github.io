@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="en-US">
+  <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+    <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Azul: a Lox interpreter that pairs with itself | Repurtum Research Lab</title>
+<meta name="description" content="Building a Go Lox interpreter that reports structured errors to an LLM repair loop.">
+<link rel="canonical" href="http://localhost:1313/notes/azul/">
+<link rel="stylesheet" href="/css/tufte-lab.css">
+
+  </head>
+  <body class="page">
+    <a class="skip-link" href="#main">Skip to content</a>
+    <header class="site-header">
+  <nav class="site-shell site-nav" aria-label="Primary navigation">
+    <a class="site-mark" href="/" aria-label="Repurtum Research Lab home">
+      
+        <img src="/repurtum_logo.png" width="34" height="34" alt="">
+      
+      <span>Repurtum</span>
+    </a>
+    <div class="site-links">
+      
+      
+        
+        <a href="/notes/" aria-current="page">Notes</a>
+      
+        
+        <a href="/about/">About</a>
+      
+    </div>
+  </nav>
+</header>
+
+    <main id="main">
+      
+<article class="site-shell research-note">
+  <header class="page-header note-header">
+    <p class="kicker">
+      draft &middot; 25 Jun 2026
+    </p>
+    <h1>Azul: a Lox interpreter that pairs with itself</h1>
+    <p class="subtitle">Building a programming language interpreter in Go that, when your code breaks, hands the error to an LLM agent and asks it to fix the source — then reruns. A study in feedback loops, interpreter design, and self-pairing programs.</p>
+  </header>
+
+  <div class="content">
+    <h2 id="the-premise">The premise</h2>
+<p>Most interpreters do three things: read your code, run your code, tell you what went wrong. Then they stop. You read the error, fix the file, run it again. The loop between machine and programmer is held together by a human staring at a terminal.</p>
+<p>Azul is a Lox interpreter written in Go that closes this loop. When it encounters an error — a bad token, a missing semicolon, a type mismatch at runtime — it packages the error into a structured payload, hands the full program context to an LLM agent, and asks it to patch the source. Then it reruns the patched file. If errors remain, it tries again. The system pairs with itself: one half runs the code, the other half reads the diagnosis and revises.</p>
+<p>The name comes from the Portuguese word for blue. The project follows Robert Nystrom&rsquo;s <em>Crafting Interpreters</em>, porting both the tree-walk interpreter and the bytecode VM into a single Go codebase.<label for="sn-0" class="margin-toggle sidenote-number"></label>
+<input type="checkbox" id="sn-0" class="margin-toggle">
+<span class="sidenote">The lab uses notes like this as working records, so project status stays visible instead of being polished away.</span>
+ But the interpreter is only half the experiment. The other half is the feedback channel between the interpreter&rsquo;s error machinery and an LLM that reasons about what went wrong.</p>
+<h2 id="how-an-interpreter-reads-your-code">How an interpreter reads your code</h2>
+<p>Before Azul can fix anything, it needs to understand the program. This happens in stages, each one transforming the source into a representation closer to meaning.</p>
+<h3 id="scanning">Scanning</h3>
+<p>The interpreter begins with a flat stream of characters. The scanner walks this stream and chunks it into <strong>tokens</strong> — the smallest meaningful units of the language. Some are single characters: <code>(</code>, <code>)</code>, <code>+</code>, <code>;</code>. Others span several characters: string literals like <code>&quot;hello&quot;</code>, numbers like <code>3.14</code>, identifiers like <code>count</code>. Keywords like <code>var</code>, <code>print</code>, <code>if</code> look like identifiers but carry special meaning.</p>
+<p>The scanner doesn&rsquo;t care about what the program <em>means</em>. It only cares about what the characters <em>are</em>. Its job is to turn a river of bytes into a sequence of labeled pieces that the next stage can reason about.</p>
+<h3 id="parsing">Parsing</h3>
+<p>The parser takes that flat sequence of tokens and builds a <strong>tree</strong> that mirrors the nested structure of the grammar. The expression <code>1 + 2 * 3</code> isn&rsquo;t just five tokens in a row — it has structure. Multiplication binds tighter than addition, so the tree must reflect that <code>2 * 3</code> is a single subtree, and addition sits above it.</p>
+<p>This tree is the <strong>abstract syntax tree</strong>, or AST. Each node represents an operation — a binary expression, a variable declaration, a function call — and its children are the operands. The parser&rsquo;s recursive descent follows the grammar rules: it tries to match expression, then term, then factor, each rule calling the next. What comes out is a tree that a machine can walk to evaluate the program.</p>
+<h3 id="static-analysis">Static analysis</h3>
+<p>Before running anything, the interpreter does one more pass. <strong>Binding</strong> or <strong>resolution</strong>: for every identifier in the program, it finds where that name was declared and wires the two together. This is where <strong>scope</strong> comes into play — the region of source code where a name refers to a particular declaration.</p>
+<p>If Lox were statically typed, this is also where type checking would happen. Once you know where <code>a</code> and <code>b</code> are declared, you know their types. If they can&rsquo;t be added together, you report the error now, before the program ever runs.</p>
+<p>The results of analysis get stored. Sometimes as extra fields on the AST nodes themselves. Sometimes in a <strong>symbol table</strong> — a lookup structure keyed by identifier names, whose values describe what each name refers to. The tree-walk interpreter uses both.</p>
+<h2 id="two-interpreters-one-codebase">Two interpreters, one codebase</h2>
+<p>Azul implements both halves of Crafting Interpreters in Go.</p>
+<p><strong>Part I: the tree-walk interpreter.</strong> This is the direct path. The interpreter walks the AST and evaluates each node on the spot. A binary addition node evaluates its left child, evaluates its right child, adds the results. A variable declaration stores a value in an environment table. A function call creates a new scope, binds the arguments, and evaluates the body.</p>
+<p>The tree-walk interpreter covers: scanning, recursive-descent parsing, AST representation, evaluation, scoping, functions, closures, and classes.</p>
+<p><strong>Part II: the bytecode VM.</strong> Instead of walking the tree, a compiler translates the AST into a flat sequence of bytecode instructions — <code>OP_ADD</code>, <code>OP_LOAD</code>, <code>OP_RETURN</code> — stored in a chunk alongside a constant pool. A stack-based virtual machine then dispatches those instructions in a tight loop. No tree traversal, no recursive function calls for evaluation. Just a stack, an instruction pointer, and a dispatch table.</p>
+<p>The bytecode path covers: chunks, the stack-based VM, value representation, a compiler from AST to bytecode, hash tables for globals and methods, closures with captured upvalues, and garbage collection.</p>
+<h2 id="go-not-java-not-c">Go, not Java, not C</h2>
+<p>Crafting Interpreters implements the tree-walk interpreter in Java and the bytecode VM in C. Azul uses neither. Java leans on inheritance hierarchies and exception-based error propagation. C uses manual memory management, pointer arithmetic, and unions. Neither maps cleanly to idiomatic Go.</p>
+<p>The translation choices matter because they determine whether the code teaches Go or merely compiles in it. A few examples:</p>
+<p><strong>Generics for type safety.</strong> The VM stack is a <code>Stack[Value]</code>, not a <code>[]any</code>. The call-frame stack is <code>Stack[CallFrame]</code>. The scoping environment is a generic <code>Table[V]</code> — the tree-walk interpreter uses <code>Table[any]</code>, the VM uses <code>Table[Value]</code>, and both share the same scoping logic. The visitor pattern is parameterized: <code>Visitor[R]</code>, so the interpreter implements <code>Visitor[Value]</code> and the AST printer implements <code>Visitor[string]</code> with no type assertions at call sites.</p>
+<p><strong>A sealed value interface.</strong> Lox values are represented as a sealed interface with a private marker method. The concrete types — <code>Number</code>, <code>Boolean</code>, <code>Nil</code>, <code>Obj</code> — are the only implementations. Type switches over <code>Value</code> are exhaustive-checked by a linter, giving compile-time guarantees when new value kinds are added.</p>
+<p><strong>Iterators.</strong> The scanner exposes tokens as an <code>iter.Seq[Token]</code> using Go 1.23&rsquo;s range-over-func feature. The parser consumes tokens with <code>for tok := range scanner.Tokens()</code> — no intermediate slice, no manual index management.</p>
+<p><strong>Panic/recover at the boundary.</strong> The tree-walk interpreter uses <code>panic</code> with a named <code>RuntimeError</code> struct to propagate errors, caught at the top-level <code>interpret()</code> call. This keeps the code close to the book&rsquo;s exception-based structure while staying inside Go&rsquo;s idioms. The parser, by contrast, uses <code>mo.Result[Expr]</code> with <code>FlatMap</code> chaining — functional error propagation that keeps recursive descent readable.</p>
+<h2 id="the-error-payload">The error payload</h2>
+<p>This is where Azul diverges from the book. Every error the interpreter produces carries a <strong>phase</strong> tag:</p>
+<ul>
+<li><strong>scan</strong> — a bad character, an unterminated string, something the scanner couldn&rsquo;t chunk into a token</li>
+<li><strong>parse</strong> — a missing semicolon, an unmatched brace, a token where the grammar didn&rsquo;t expect one</li>
+<li><strong>runtime</strong> — a type mismatch, an undefined variable, a division by zero that only surfaces during execution</li>
+</ul>
+<p>The phase matters because different classes of error require different reasoning. A scan error means the source contains characters the language doesn&rsquo;t recognize. A parse error means the tokens are valid but arranged in a way the grammar can&rsquo;t accept. A runtime error means the program is syntactically correct but semantically broken. The agent needs this distinction to apply the right kind of fix.</p>
+<p>The full payload sent to the agent includes the source path, the complete source text, and every error with its line number, column, message, offending token, and phase.<label for="mn-1" class="margin-toggle">&#8853;</label>
+<input type="checkbox" id="mn-1" class="margin-toggle">
+<span class="marginnote">Phase tags keep the repair agent from treating every failure as one undifferentiated compiler error.</span>
+ This is enough context for the agent to read the program, understand where it broke, and reason about what the author likely intended.</p>
+<h2 id="the-fix-loop">The fix loop</h2>
+<p>When you run <code>azul run file.lox --fix</code>, the interpreter doesn&rsquo;t stop at reporting errors. It enters a loop:</p>
+<ol>
+<li>Read the file, run it through the full pipeline — scan, parse, resolve, interpret</li>
+<li>If no errors, print the output and exit</li>
+<li>If errors, print them to stderr and build the error payload</li>
+<li>Hand the payload to the LLM agent</li>
+<li>The agent calls <code>read_source</code> to inspect the code around each error</li>
+<li>The agent calls <code>apply_patch</code> with the corrected source and an explanation</li>
+<li>Write the patched file to disk, rerun from step 1</li>
+<li>If errors persist after three attempts, give up</li>
+</ol>
+<p>The agent has exactly two tools. <strong><code>read_source</code></strong> reads a line range from the file with line numbers prepended, so the agent can inspect context around an error before deciding on a fix. <strong><code>apply_patch</code></strong> receives the complete corrected source as a string and writes it to disk. Full replacement rather than diffs — Lox programs are small, and diffs require the agent to reason about line offsets, which introduces failure modes that don&rsquo;t help anyone.</p>
+<p>The system prompt instructs the agent to read before fixing, find root causes rather than symptoms, and never add features or refactor — only fix what is broken. If no safe fix is determinable, it returns the original source unchanged with an explanation of why.</p>
+<h2 id="self-pairing-concretely">Self-pairing, concretely</h2>
+<p>The original premise of Azul was about feedback loops and self-pairing programs. The interpreter makes this concrete.</p>
+<p>A self-pairing program is not one model pretending to be two people. It is a loop where separate passes maintain different obligations. The interpreter&rsquo;s obligation is accuracy: scan correctly, parse correctly, evaluate correctly, report errors with enough structure that they&rsquo;re actionable. The agent&rsquo;s obligation is repair: read the diagnosis, understand the intent, produce a fix that eliminates the error without introducing new ones.</p>
+<p>The feedback channel between them is the error payload — a structured object with phase tags, line numbers, and the full source. Not a log message. Not a stack trace pasted into a chat window. A first-class object designed to carry exactly the information the next pass needs to act.</p>
+<p>This is what makes the loop a research object rather than a product feature. You can measure it:</p>
+<ul>
+<li>Does the agent&rsquo;s fix eliminate the reported error?</li>
+<li>Does the fix introduce new errors?</li>
+<li>Does the explanation match the actual diff?</li>
+<li>How many attempts does it take to converge?</li>
+<li>Which error phases are hardest to fix — scan, parse, or runtime?</li>
+</ul>
+<h2 id="what-remains">What remains</h2>
+<p>The tree-walk interpreter is implemented. The bytecode compiler and VM are next — a tighter, faster execution path that introduces its own class of errors for the agent to reason about. Beyond that, the natural evolution is a <code>RunContext</code> that accumulates everything the interpreter knows during a run: the token stream, the AST, partial output, and the ordered error list. This gives the agent richer context than a bare error payload — not just what went wrong, but how far the program got before it broke.</p>
+<p>The longer arc is instrumentation. Instead of waiting for the interpreter to crash, emit structured events during execution — variable assigned, function entered, return value produced, error hit. The agent receives these events and builds a live model of program state. This is closer to a debugger with LLM reasoning than a post-mortem fix loop, and it&rsquo;s the direction Azul is heading.</p>
+<p>For now, the loop is simple and the feedback is legible. That&rsquo;s the point. An interpreter that knows how to describe its own failures. An agent that knows how to read those descriptions. A file that gets rewritten and rerun until it works, or until the system admits it doesn&rsquo;t know how to help.</p>
+
+  </div>
+
+  
+    <footer class="note-tags" aria-label="Tags">
+      <span>interpreters</span><span>agentic repair</span><span>lox</span><span>go</span>
+    </footer>
+  
+</article>
+
+    </main>
+    <footer class="site-footer site-shell">
+  <p>Research notes on interpreters, agents, and feedback loops. &middot; 2026</p>
+</footer>
+
+  </body>
+</html>
