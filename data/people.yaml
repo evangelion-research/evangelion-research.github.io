@@ -1,0 +1,42 @@
+members:
+  - name: "Sagnik Chatterjee"
+    initials: "SC"
+    role: "Principal investigator"
+    focus: "Programming language semantics, mechanised proof, mechanistic interpretability."
+    links:
+      - label: "GitHub"
+        url: "https://github.com/sagnikc395"
+
+  - name: "Open position"
+    initials: "??"
+    role: "Research collaborator"
+    focus: "Type theory, abstract interpretation, or empirical circuit analysis. Write to us."
+    links:
+      - label: "Enquire"
+        url: "mailto:contact@evangelion-research.org"
+
+open_problems:
+  - title: "What is the right notion of observational equivalence for circuits?"
+    body: >-
+      Two circuits that agree on every input in distribution may diverge under
+      intervention. Contextual equivalence from PL theory gives a candidate: agreement
+      under every well-typed context, where contexts are ablations, patches, and
+      steering vectors.
+
+  - title: "Can a feature explanation be a typing judgement?"
+    body: >-
+      If a claim like "this direction encodes indirect object identity" is written as
+      a judgement, then checking it becomes type checking against a finite activation
+      sample, and a wrong claim fails loudly instead of quietly.
+
+  - title: "How far does abstract interpretation scale into the residual stream?"
+    body: >-
+      Sound over-approximation buys guarantees but loses precision. We want the widening
+      operators that keep bounds informative at depth, and the point at which symbolic
+      description must give way to measurement.
+
+  - title: "Is superposition a compilation strategy?"
+    body: >-
+      Register allocation packs many virtual registers into few physical ones under a
+      liveness constraint. If superposition is the same phenomenon, decompilation
+      techniques should transfer.

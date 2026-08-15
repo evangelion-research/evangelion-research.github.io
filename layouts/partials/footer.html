@@ -1,3 +1,30 @@
-<footer class="site-footer site-shell">
-  <p>{{ site.Params.footer }} &middot; {{ now.Format "2006" }}</p>
+<footer class="site-footer">
+  <div class="shell footer-grid">
+    <div class="footer-brand">
+      {{ partial "mark.html" . }}
+      <p class="footer-motto">{{ site.Params.motto }}</p>
+    </div>
+
+    <div class="footer-col">
+      <h2>Sections</h2>
+      <ul>
+        {{ range site.Menus.main }}
+          <li><a href="{{ .URL | relURL }}">{{ .Name }}</a></li>
+        {{ end }}
+      </ul>
+    </div>
+
+    <div class="footer-col">
+      <h2>Contact</h2>
+      <ul>
+        {{ with site.Params.email }}<li><a href="mailto:{{ . }}">{{ . }}</a></li>{{ end }}
+        {{ with site.Params.github }}<li><a href="{{ . }}" rel="me noopener">GitHub</a></li>{{ end }}
+        {{ with .OutputFormats.Get "rss" }}<li><a href="{{ .Permalink }}">RSS</a></li>{{ end }}
+      </ul>
+    </div>
+  </div>
+  <div class="shell footer-base">
+    <p>{{ site.Params.footer }}</p>
+    <p class="footer-stamp">MMXXV &mdash; {{ now.Format "2006" }} &middot; <span data-clock>--:--:--</span> UTC</p>
+  </div>
 </footer>

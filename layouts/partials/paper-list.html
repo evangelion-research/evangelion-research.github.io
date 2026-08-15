@@ -1,0 +1,21 @@
+<ol class="paper-list">
+  {{ range . }}
+    <li class="paper-item">
+      <p class="paper-meta">
+        <span class="paper-year">{{ .year }}</span>
+        {{ with .venue }}<span class="paper-venue">{{ . }}</span>{{ end }}
+        {{ with .kind }}<span class="status-chip">{{ . }}</span>{{ end }}
+      </p>
+      <h3 class="paper-title">
+        {{ if .url }}<a href="{{ .url }}" rel="noopener">{{ .title }}</a>{{ else }}{{ .title }}{{ end }}
+      </h3>
+      <p class="paper-authors">{{ .authors }}</p>
+      {{ with .abstract }}<p class="paper-abstract">{{ . }}</p>{{ end }}
+      {{ with .links }}
+        <ul class="paper-links">
+          {{ range . }}<li><a href="{{ .url }}" rel="noopener">{{ .label }}</a></li>{{ end }}
+        </ul>
+      {{ end }}
+    </li>
+  {{ end }}
+</ol>

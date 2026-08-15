@@ -1,17 +1,27 @@
 <header class="site-header">
-  <nav class="site-shell site-nav" aria-label="Primary navigation">
-    <a class="site-mark" href="{{ "/" | relURL }}" aria-label="Repurtum Research Lab home">
-      {{ with resources.Get "repurtum_logo.png" }}
-        <img src="{{ .RelPermalink }}" width="34" height="34" alt="">
-      {{ end }}
-      <span>Repurtum</span>
+  <div class="shell nav-shell">
+    <a class="site-mark" href="{{ "/" | relURL }}" aria-label="{{ site.Title }} home">
+      {{ partial "mark.html" . }}
+      <span class="site-mark-text">
+        <b>EVANGELION</b>
+        <i>RESEARCH</i>
+      </span>
     </a>
-    <div class="site-links">
+
+    <nav class="site-links" aria-label="Primary">
       {{ $current := . }}
       {{ range site.Menus.main }}
         {{ $active := or ($current.IsMenuCurrent "main" .) ($current.HasMenuCurrent "main" .) }}
-        <a href="{{ .URL | relURL }}"{{ if $active }} aria-current="page"{{ end }}>{{ .Name }}</a>
+        <a href="{{ .URL | relURL }}"{{ if $active }} aria-current="page"{{ end }}>
+          <span class="link-idx">{{ printf "%02d" (div .Weight 10) }}</span>{{ .Name }}
+        </a>
       {{ end }}
-    </div>
-  </nav>
+    </nav>
+
+    <button class="theme-toggle" type="button" data-theme-toggle aria-label="Toggle color scheme">
+      <span class="theme-toggle-dot" aria-hidden="true"></span>
+      <span class="theme-toggle-label" data-theme-label>DARK</span>
+    </button>
+  </div>
+  <div class="header-rule" aria-hidden="true"></div>
 </header>

@@ -1,0 +1,4 @@
+<aside class="spec-block">
+  <p class="spec-title">{{ .Get "title" | default "Definition" }}</p>
+  <div class="spec-body">{{ .Inner | markdownify }}</div>
+</aside>

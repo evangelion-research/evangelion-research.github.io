@@ -1,0 +1,4 @@
+<div class="terminal-block" role="group" aria-label="{{ .Get "title" | default "terminal" }}">
+  <p class="terminal-bar"><span class="dot"></span><span class="dot"></span><span class="dot"></span>{{ .Get "title" | default "shell" }}</p>
+  <pre><code>{{ trim .Inner "\n" }}</code></pre>
+</div>

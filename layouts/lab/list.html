@@ -1,0 +1,44 @@
+{{ define "main" }}
+<article class="shell section-page">
+  <header class="page-header">
+    <p class="kicker"><span class="blip" aria-hidden="true"></span>the lab</p>
+    <h1 data-glitch="{{ .Title }}">{{ .Title }}</h1>
+    {{ with .Params.subtitle | default .Params.description }}<p class="subtitle">{{ . }}</p>{{ end }}
+  </header>
+
+  {{ with .Content }}<div class="content prose-lead">{{ . }}</div>{{ end }}
+
+  {{ with hugo.Data.people.members }}
+    <section class="people">
+      <div class="section-head"><p class="section-idx">// people</p><h2>Members</h2></div>
+      <ul class="people-grid">
+        {{ range . }}
+          <li class="person-card">
+            <p class="person-initials" aria-hidden="true">{{ .initials }}</p>
+            <h3>{{ .name }}</h3>
+            <p class="person-role">{{ .role }}</p>
+            {{ with .focus }}<p class="person-focus">{{ . }}</p>{{ end }}
+            {{ with .links }}
+              <ul class="paper-links">{{ range . }}<li><a href="{{ .url }}" rel="noopener">{{ .label }}</a></li>{{ end }}</ul>
+            {{ end }}
+          </li>
+        {{ end }}
+      </ul>
+    </section>
+  {{ end }}
+
+  {{ with hugo.Data.people.open_problems }}
+    <section class="open-problems">
+      <div class="section-head"><p class="section-idx">// open</p><h2>Open problems</h2></div>
+      <ol class="problem-list">
+        {{ range . }}
+          <li>
+            <h3>{{ .title }}</h3>
+            <p>{{ .body }}</p>
+          </li>
+        {{ end }}
+      </ol>
+    </section>
+  {{ end }}
+</article>
+{{ end }}

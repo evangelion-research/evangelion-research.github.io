@@ -1,0 +1,26 @@
+{{ define "main" }}
+<article class="shell section-page">
+  <header class="page-header">
+    <p class="kicker"><span class="blip" aria-hidden="true"></span>publications &amp; preprints</p>
+    <h1 data-glitch="{{ .Title }}">{{ .Title }}</h1>
+    {{ with .Params.subtitle | default .Params.description }}<p class="subtitle">{{ . }}</p>{{ end }}
+  </header>
+
+  {{ with .Content }}<div class="content prose-lead">{{ . }}</div>{{ end }}
+
+  {{ $items := hugo.Data.papers.items }}
+  {{ if $items }}
+    {{ $years := slice }}
+    {{ range $items }}{{ $years = $years | append .year }}{{ end }}
+    {{ range collections.Reverse (sort (uniq $years)) }}
+      {{ $y := . }}
+      <section class="paper-year-block">
+        <h2 class="year-head"><span>{{ $y }}</span></h2>
+        {{ partial "paper-list.html" (where $items "year" $y) }}
+      </section>
+    {{ end }}
+  {{ else }}
+    <p class="empty">No papers listed yet.</p>
+  {{ end }}
+</article>
+{{ end }}

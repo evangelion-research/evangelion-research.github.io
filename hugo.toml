@@ -1,31 +1,53 @@
-baseURL = "https://repurtum.github.io/"
+baseURL = "https://evangelion-research.github.io/"
 locale = "en-US"
-title = "Repurtum Research Lab"
+title = "Evangelion Research"
 
 enableRobotsTXT = true
-summaryLength = 32
+enableGitInfo = false
+summaryLength = 34
 
 [params]
-  description = "Research notes on interpreters, agentic repair loops, and self-pairing software systems."
-  kicker = "Repurtum Research Lab"
-  footer = "Research notes on interpreters, agents, and feedback loops."
+  description = "An interpretability lab studying mechanistic interpretability through formal reasoning and programming languages research."
+  kicker = "Evangelion Research"
+  tagline = "Mechanistic interpretability through formal reasoning."
+  motto = "A network is a program. Read it like one."
+  footer = "Evangelion Research — interpretability, formal reasoning, programming languages."
+  email = "contact@evangelion-research.org"
+  github = "https://github.com/evangelion-research"
 
 [markup]
   [markup.highlight]
     noClasses = false
+    lineNos = false
+    tabWidth = 2
   [markup.goldmark]
     [markup.goldmark.renderer]
       unsafe = true
+  [markup.tableOfContents]
+    startLevel = 2
+    endLevel = 3
 
 [permalinks]
   notes = "/notes/:slug/"
+  research = "/research/:slug/"
+
+[taxonomies]
+  tag = "tags"
 
 [menu]
   [[menu.main]]
-    name = "Notes"
-    pageRef = "/notes"
+    name = "Research"
+    pageRef = "/research"
     weight = 10
   [[menu.main]]
-    name = "About"
-    pageRef = "/about"
+    name = "Notes"
+    pageRef = "/notes"
     weight = 20
+  [[menu.main]]
+    name = "Papers"
+    pageRef = "/papers"
+    weight = 30
+  [[menu.main]]
+    name = "Lab"
+    pageRef = "/lab"
+    weight = 40

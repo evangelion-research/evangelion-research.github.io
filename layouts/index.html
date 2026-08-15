@@ -1,31 +1,94 @@
 {{ define "main" }}
-<article class="site-shell home-article">
-  <header class="page-header">
-    {{ with site.Params.kicker }}<p class="kicker">{{ . }}</p>{{ end }}
-    <h1>{{ .Title }}</h1>
-    {{ with .Params.subtitle }}<p class="subtitle">{{ . }}</p>{{ end }}
-  </header>
+<section class="hero">
+  <div class="shell hero-shell">
+    <p class="kicker hero-kicker"><span class="blip" aria-hidden="true"></span>{{ site.Params.kicker }} &middot; interpretability division</p>
 
-  <div class="content">
+    <h1 class="hero-title" data-glitch="{{ .Title }}">{{ .Title }}</h1>
+
+    <p class="hero-lede">{{ .Params.subtitle | default site.Params.tagline }}</p>
+
+    <div class="hero-actions">
+      <a class="btn btn-primary" href="{{ "/research/" | relURL }}">Research programme <span aria-hidden="true">&rarr;</span></a>
+      <a class="btn" href="{{ "/notes/" | relURL }}">Lab notes</a>
+    </div>
+
+    <dl class="readout" aria-label="Lab status">
+      {{ $notes := where site.RegularPages "Section" "notes" }}
+      {{ $threads := where site.RegularPages "Section" "research" }}
+      {{ $papers := hugo.Data.papers.items | default slice }}
+      <div><dt>Threads</dt><dd>{{ printf "%02d" (len $threads) }}</dd></div>
+      <div><dt>Notes</dt><dd>{{ printf "%02d" (len $notes) }}</dd></div>
+      <div><dt>Papers</dt><dd>{{ printf "%02d" (len $papers) }}</dd></div>
+      <div><dt>Status</dt><dd class="ok">OPERATIONAL</dd></div>
+    </dl>
+  </div>
+  <div class="hero-glow" aria-hidden="true"></div>
+</section>
+
+<section class="shell home-thesis">
+  <div class="section-head">
+    <p class="section-idx">// 01</p>
+    <h2>Thesis</h2>
+  </div>
+  <div class="content prose-lead">
     {{ .Content }}
   </div>
+</section>
 
-  <section class="latest-notes" aria-labelledby="latest-notes-title">
-    <h2 id="latest-notes-title">Latest Research Notes</h2>
-    {{ $notes := first 5 (where site.RegularPages "Section" "notes") }}
-    {{ if $notes }}
-      <ol class="post-list">
-        {{ range $notes }}
-          <li>
-            <a href="{{ .RelPermalink }}">{{ .Title }}</a>
-            <span>{{ .Date.Format "2 Jan 2006" }}</span>
-            {{ with .Params.excerpt }}<p>{{ . }}</p>{{ else }}<p>{{ .Summary }}</p>{{ end }}
-          </li>
-        {{ end }}
-      </ol>
-    {{ else }}
-      <p>No notes published yet.</p>
+{{ $threads := where site.RegularPages "Section" "research" }}
+{{ with $threads.ByWeight }}
+<section class="shell home-threads">
+  <div class="section-head">
+    <p class="section-idx">// 02</p>
+    <h2>Research threads</h2>
+    <a class="section-more" href="{{ "/research/" | relURL }}">all threads &rarr;</a>
+  </div>
+  <ol class="thread-grid">
+    {{ range . }}
+      <li class="thread-card">
+        <a href="{{ .RelPermalink }}">
+          <p class="thread-code">{{ .Params.code | default "THR" }}</p>
+          <h3>{{ .Title }}</h3>
+          <p class="thread-blurb">{{ .Params.excerpt | default .Summary }}</p>
+          {{ with .Params.methods }}
+            <ul class="tag-row">{{ range . }}<li>{{ . }}</li>{{ end }}</ul>
+          {{ end }}
+        </a>
+      </li>
     {{ end }}
-  </section>
-</article>
+  </ol>
+</section>
+{{ end }}
+
+{{ $notes := first 4 (where site.RegularPages "Section" "notes").ByDate.Reverse }}
+{{ with $notes }}
+<section class="shell home-notes">
+  <div class="section-head">
+    <p class="section-idx">// 03</p>
+    <h2>Recent notes</h2>
+    <a class="section-more" href="{{ "/notes/" | relURL }}">all notes &rarr;</a>
+  </div>
+  {{ partial "post-list.html" . }}
+</section>
+{{ end }}
+
+{{ with hugo.Data.papers.items }}
+<section class="shell home-papers">
+  <div class="section-head">
+    <p class="section-idx">// 04</p>
+    <h2>Selected writing</h2>
+    <a class="section-more" href="{{ "/papers/" | relURL }}">all papers &rarr;</a>
+  </div>
+  {{ partial "paper-list.html" (first 3 .) }}
+</section>
+{{ end }}
+
+<section class="shell home-contact">
+  <div class="contact-panel">
+    <p class="section-idx">// 05</p>
+    <h2>Work with the lab</h2>
+    <p>We collaborate with people who care about proofs, semantics, and what a model is actually computing. Open problems, visiting research, and joint work all start the same way.</p>
+    <p class="contact-line"><a class="btn btn-primary" href="mailto:{{ site.Params.email }}">{{ site.Params.email }}</a></p>
+  </div>
+</section>
 {{ end }}

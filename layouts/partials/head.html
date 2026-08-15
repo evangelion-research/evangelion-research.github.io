@@ -1,6 +1,6 @@
-{{- $title := cond .IsHome site.Title (printf "%s | %s" .Title site.Title) -}}
-{{- $description := .Params.description | default site.Params.description -}}
-{{- $css := resources.Get "css/tufte-lab.css" -}}
+{{- $title := cond .IsHome site.Title (printf "%s — %s" .Title site.Title) -}}
+{{- $description := .Params.description | default .Params.excerpt | default site.Params.description -}}
+{{- $css := resources.Get "css/eva.css" -}}
 {{- if hugo.IsProduction -}}
   {{- $css = $css | minify | fingerprint -}}
 {{- end -}}
@@ -9,4 +9,32 @@
 <title>{{ $title }}</title>
 <meta name="description" content="{{ $description }}">
 <link rel="canonical" href="{{ .Permalink }}">
+<meta name="color-scheme" content="dark light">
+<meta name="theme-color" content="#07090c">
+
+<meta property="og:type" content="{{ if .IsPage }}article{{ else }}website{{ end }}">
+<meta property="og:title" content="{{ $title }}">
+<meta property="og:description" content="{{ $description }}">
+<meta property="og:url" content="{{ .Permalink }}">
+<meta property="og:site_name" content="{{ site.Title }}">
+<meta name="twitter:card" content="summary_large_image">
+
+{{- with .OutputFormats.Get "rss" }}
+<link rel="alternate" type="application/rss+xml" href="{{ .Permalink }}" title="{{ site.Title }}">
+{{- end }}
+
+{{ partial "favicon.html" . }}
+
+<script>
+  // Applied before first paint so the chosen theme never flashes.
+  (function () {
+    try {
+      var stored = localStorage.getItem("eva-theme");
+      if (stored === "light" || stored === "dark") {
+        document.documentElement.setAttribute("data-theme", stored);
+      }
+    } catch (e) {}
+  })();
+</script>
+
 <link rel="stylesheet" href="{{ $css.RelPermalink }}"{{ if hugo.IsProduction }} integrity="{{ $css.Data.Integrity }}" crossorigin="anonymous"{{ end }}>
