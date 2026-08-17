@@ -1,6 +1,6 @@
 # evangelion-research.github.io
 
-Hugo site for **Evangelion Research** — an interpretability lab studying mechanistic
+Hugo site for **Evangelion Research**, an interpretability lab studying mechanistic
 interpretability through formal reasoning and programming languages research.
 
 Dark theme by default (terminal/brutalist, EVA orange + terminal lime), with a light mode
@@ -12,7 +12,7 @@ toggle stored in `localStorage` and applied before first paint.
 content/
   _index.md                  home page thesis
   research/                  standing research threads (one file per thread)
-  notes/                     lab notes (page bundles)
+  notes/                     lab notes (page bundles; current post: emerald)
   papers/_index.md           intro copy; the list itself comes from data/papers.yaml
   lab/_index.md              intro copy; people + open problems from data/people.yaml
 data/
@@ -58,7 +58,7 @@ Shortcodes:
 {{< terminal title="shell" >}}hugo server{{< /terminal >}}
 ```
 
-Papers and people are data-driven — edit `data/papers.yaml` and `data/people.yaml` rather
+Papers and people are data-driven: edit `data/papers.yaml` and `data/people.yaml` rather
 than adding content files.
 
 ## Develop

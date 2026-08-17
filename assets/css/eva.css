@@ -1,5 +1,5 @@
 /* =============================================================
-   Evangelion Research — interpretability lab
+   Evangelion Research: interpretability lab
    Dark-first terminal/brutalist theme with an optional light mode.
    ============================================================= */
 
@@ -329,7 +329,7 @@ h1, h2, h3, h4 {
 }
 .hero-actions { display: flex; gap: 0.85rem; flex-wrap: wrap; margin-top: 2.4rem; }
 
-/* glitch on hover — decorative only */
+/* glitch on hover, decorative only */
 [data-glitch] { position: relative; }
 [data-glitch]::before,
 [data-glitch]::after {

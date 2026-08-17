@@ -1,4 +1,4 @@
-{{- $title := cond .IsHome site.Title (printf "%s — %s" .Title site.Title) -}}
+{{- $title := cond .IsHome site.Title (printf "%s · %s" .Title site.Title) -}}
 {{- $description := .Params.description | default .Params.excerpt | default site.Params.description -}}
 {{- $css := resources.Get "css/eva.css" -}}
 {{- if hugo.IsProduction -}}

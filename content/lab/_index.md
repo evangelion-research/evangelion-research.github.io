@@ -1,7 +1,7 @@
 ---
 title: "The Lab"
 subtitle: "A small independent research group working at the seam between programming languages theory and mechanistic interpretability."
-description: "About Evangelion Research — people, method, and open problems."
+description: "About Evangelion Research: people, method, and open problems."
 ---
 
 Evangelion Research is independent and deliberately small. We work in the open: notes are

@@ -15,8 +15,8 @@ syntax, the second is semantics, and conflating them is why circuit claims are h
 
 ## The construction
 
-We fix a small combinator language whose terms denote functions on the residual stream —
-copy, match, shift, select, and composition — and give it a denotational semantics in the same
+We fix a small combinator language whose terms denote functions on the residual stream:
+copy, match, shift, select, and composition. We give it a denotational semantics in the same
 space the model operates on. A circuit claim is then a pair: a term $t$ in the language, and a
 subgraph $G$ of the model. The claim is that $[\![t]\!]$ and the behaviour of $G$ agree up to
 an explicitly stated error relation on an explicitly stated input set.
@@ -34,7 +34,7 @@ claim, which is not currently possible.
 
 Denotation tells you what a circuit computes; it does not tell you how the computation is
 staged across layers. For that we keep a small-step relation over configurations of the
-residual stream, which is what lets us talk about intermediate states — the objects activation
+residual stream, which is what lets us talk about intermediate states, the objects activation
 patching actually manipulates. Patching is then a rule of the operational semantics rather
 than an experimental technique with unclear scope.
 

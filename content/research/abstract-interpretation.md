@@ -10,12 +10,12 @@ tags: ["abstraction", "soundness", "ablation"]
 ---
 
 Interpretability experiments are dynamic analyses: run the model, watch what happens, infer a
-mechanism. Static analysis has the complementary failure mode — it says less, but what it says
+mechanism. Static analysis has the complementary failure mode: it says less, but what it says
 holds for every input. We think the field is missing the static half.
 
 ## The connection
 
-Fix an abstract domain over activation space — intervals per direction, polyhedra over a
+Fix an abstract domain over activation space: intervals per direction, polyhedra over a
 feature basis, or a symbolic description of which features may fire. A Galois connection
 between concrete activation sets and abstract descriptions gives, for each layer, an abstract
 transformer that over-approximates the real one.
@@ -26,7 +26,7 @@ The abstract layer never claims a behaviour the real layer cannot exhibit.
 {{< /spec >}}
 
 Run the abstract transformers layer by layer and you get a statement of the form: *under this
-ablation, the model's output distribution stays within these bounds* — for all inputs in the
+ablation, the model's output distribution stays within these bounds, for all inputs in the
 domain, not just the thousand you sampled.
 
 ## Precision is the whole game

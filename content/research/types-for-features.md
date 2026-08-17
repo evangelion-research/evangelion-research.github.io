@@ -22,7 +22,9 @@ whose predicate is `contains_indirect_object(x)` says something checkable about 
 activation that fires it.
 
 {{< spec title="Feature judgement" >}}
-Γ ⊢ f : {v : Act_ℓ | φ(v)}   —   f is a feature at layer ℓ whose firing set is contained in φ.
+Γ ⊢ f : {v : Act_ℓ | φ(v)}
+
+That is: f is a feature at layer ℓ whose firing set is contained in φ.
 {{< /spec >}}
 
 Subtyping then does real work. A "proper noun" feature should be a supertype of a "city name"

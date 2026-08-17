@@ -1,4 +1,4 @@
-/* Evangelion Research — theme toggle, scroll reveal, UTC clock. */
+/* Evangelion Research: theme toggle, scroll reveal, UTC clock. */
 (function () {
   "use strict";
 

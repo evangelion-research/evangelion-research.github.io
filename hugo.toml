@@ -11,7 +11,7 @@ summaryLength = 34
   kicker = "Evangelion Research"
   tagline = "Mechanistic interpretability through formal reasoning."
   motto = "A network is a program. Read it like one."
-  footer = "Evangelion Research — interpretability, formal reasoning, programming languages."
+  footer = "Evangelion Research: interpretability, formal reasoning, programming languages."
   email = "contact@evangelion-research.org"
   github = "https://github.com/evangelion-research"
 
