@@ -1,33 +1,23 @@
 {{ define "main" }}
 <section class="hero">
   <div class="shell hero-shell">
-    <p class="kicker hero-kicker"><span class="blip" aria-hidden="true"></span>{{ site.Params.kicker }} &middot; interpretability division</p>
+    <p class="kicker hero-kicker">{{ site.Params.kicker }}</p>
 
-    <h1 class="hero-title" data-glitch="{{ .Title }}">{{ .Title }}</h1>
+    <h1 class="hero-title">{{ .Title }}</h1>
 
     <p class="hero-lede">{{ .Params.subtitle | default site.Params.tagline }}</p>
 
     <div class="hero-actions">
       <a class="btn btn-primary" href="{{ "/research/" | relURL }}">Research programme <span aria-hidden="true">&rarr;</span></a>
-      <a class="btn" href="{{ "/notes/" | relURL }}">Lab notes</a>
+      <a class="btn" href="{{ "/notes/" | relURL }}">Notes</a>
+      <a class="btn" href="{{ site.Params.emerald }}" rel="noopener">Emerald on GitHub</a>
     </div>
-
-    <dl class="readout" aria-label="Lab status">
-      {{ $notes := where site.RegularPages "Section" "notes" }}
-      {{ $threads := where site.RegularPages "Section" "research" }}
-      {{ $papers := hugo.Data.papers.items | default slice }}
-      <div><dt>Threads</dt><dd>{{ printf "%02d" (len $threads) }}</dd></div>
-      <div><dt>Notes</dt><dd>{{ printf "%02d" (len $notes) }}</dd></div>
-      <div><dt>Papers</dt><dd>{{ printf "%02d" (len $papers) }}</dd></div>
-      <div><dt>Status</dt><dd class="ok">OPERATIONAL</dd></div>
-    </dl>
   </div>
   <div class="hero-glow" aria-hidden="true"></div>
 </section>
 
 <section class="shell home-thesis">
   <div class="section-head">
-    <p class="section-idx">// 01</p>
     <h2>Thesis</h2>
   </div>
   <div class="content prose-lead">
@@ -39,7 +29,6 @@
 {{ with $threads.ByWeight }}
 <section class="shell home-threads">
   <div class="section-head">
-    <p class="section-idx">// 02</p>
     <h2>Research threads</h2>
     <a class="section-more" href="{{ "/research/" | relURL }}">all threads &rarr;</a>
   </div>
@@ -64,7 +53,6 @@
 {{ with $notes }}
 <section class="shell home-notes">
   <div class="section-head">
-    <p class="section-idx">// 03</p>
     <h2>Recent notes</h2>
     <a class="section-more" href="{{ "/notes/" | relURL }}">all notes &rarr;</a>
   </div>
@@ -72,22 +60,10 @@
 </section>
 {{ end }}
 
-{{ with hugo.Data.papers.items }}
-<section class="shell home-papers">
-  <div class="section-head">
-    <p class="section-idx">// 04</p>
-    <h2>Selected writing</h2>
-    <a class="section-more" href="{{ "/papers/" | relURL }}">all papers &rarr;</a>
-  </div>
-  {{ partial "paper-list.html" (first 3 .) }}
-</section>
-{{ end }}
-
 <section class="shell home-contact">
   <div class="contact-panel">
-    <p class="section-idx">// 05</p>
-    <h2>Work with the lab</h2>
-    <p>We collaborate with people who care about proofs, semantics, and what a model is actually computing. Open problems, visiting research, and joint work all start the same way.</p>
+    <h2>Contact</h2>
+    <p>Email is the best way to reach us. We are happy to discuss the research programme, the notes, or Emerald itself.</p>
     <p class="contact-line"><a class="btn btn-primary" href="mailto:{{ site.Params.email }}">{{ site.Params.email }}</a></p>
   </div>
 </section>

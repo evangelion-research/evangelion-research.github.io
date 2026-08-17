@@ -7,13 +7,14 @@ enableGitInfo = false
 summaryLength = 34
 
 [params]
-  description = "An interpretability lab studying mechanistic interpretability through formal reasoning and programming languages research."
+  description = "Research on mechanistic interpretability through formal reasoning and programming languages."
   kicker = "Evangelion Research"
   tagline = "Mechanistic interpretability through formal reasoning."
   motto = "A network is a program. Read it like one."
   footer = "Evangelion Research: interpretability, formal reasoning, programming languages."
   email = "contact@evangelion-research.org"
   github = "https://github.com/evangelion-research"
+  emerald = "https://github.com/evangelion-research/emerald"
 
 [markup]
   [markup.highlight]
@@ -43,11 +44,3 @@ summaryLength = 34
     name = "Notes"
     pageRef = "/notes"
     weight = 20
-  [[menu.main]]
-    name = "Papers"
-    pageRef = "/papers"
-    weight = 30
-  [[menu.main]]
-    name = "Lab"
-    pageRef = "/lab"
-    weight = 40

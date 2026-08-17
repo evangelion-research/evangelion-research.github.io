@@ -1,10 +1,9 @@
-/* Evangelion Research: theme toggle, scroll reveal, UTC clock. */
+/* Evangelion Research: theme toggle. */
 (function () {
   "use strict";
 
   var root = document.documentElement;
 
-  /* ---- theme ---- */
   function currentTheme() {
     return root.getAttribute("data-theme") === "light" ? "light" : "dark";
   }
@@ -25,43 +24,5 @@
       paintToggle();
     });
     paintToggle();
-  }
-
-  /* ---- scroll reveal ---- */
-  var reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  if (!reduced && "IntersectionObserver" in window) {
-    var targets = document.querySelectorAll(
-      "main section.shell, .thread-card, .post-item, .paper-item, .person-card, .problem-list li"
-    );
-    var io = new IntersectionObserver(
-      function (entries) {
-        entries.forEach(function (entry) {
-          if (!entry.isIntersecting) return;
-          entry.target.classList.add("is-visible");
-          io.unobserve(entry.target);
-        });
-      },
-      { rootMargin: "0px 0px -8% 0px", threshold: 0.05 }
-    );
-    targets.forEach(function (el, i) {
-      el.classList.add("reveal");
-      el.style.transitionDelay = Math.min(i % 6, 5) * 45 + "ms";
-      io.observe(el);
-    });
-  }
-
-  /* ---- UTC clock in the footer ---- */
-  var clock = document.querySelector("[data-clock]");
-  if (clock) {
-    var pad = function (n) {
-      return String(n).padStart(2, "0");
-    };
-    var tick = function () {
-      var d = new Date();
-      clock.textContent =
-        pad(d.getUTCHours()) + ":" + pad(d.getUTCMinutes()) + ":" + pad(d.getUTCSeconds());
-    };
-    tick();
-    setInterval(tick, 1000);
   }
 })();

@@ -1,5 +1,5 @@
 ---
-title: "Lab Notes"
+title: "Notes"
 subtitle: "Working documents: drafts, half-proofs, and negative results, published early because the mechanism is the interesting part."
 description: "Working notes from Evangelion Research on interpretability, semantics, type systems, and language implementation."
 ---

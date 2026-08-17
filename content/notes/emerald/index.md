@@ -49,8 +49,25 @@ foo.rald -> lexer -> parser -> type checker -> C codegen -> cc -> ./foo
 
 `--emit-tokens`, `--emit-ast`, `--check`, `--emit-c`, and `--keep-c` each stop the compiler at
 a stage, which is what lets every stage have its own golden test suite under
-`tests/{lexer,parser,check,e2e}`. The driver is `bin/emeraldc`; `task test` runs all four
-suites, currently sixteen golden tests.
+`tests/{lexer,parser,check,imports,e2e}`. The driver is `bin/emeraldc`; `task test` runs
+every suite.
+
+## Programs that span files
+
+A `.rald` file is a module, and `import` names code in another one:
+
+```emerald
+import strings                # module object: strings.split(...)
+import text.strings as ts     # dotted paths map to directories
+from strings import split, join   # names lifted into this module
+```
+
+Module paths resolve against the importing file's directory, then the project's `src/` root,
+then each `-I <dir>` in the order given; first hit wins. A leading underscore makes a
+top-level name private; everything else is exported. The compiler loads the whole import
+graph and links it into one program, mangling each imported module's top-level names to
+`<module>__<name>` so two packages can both define `parse`. The entire contract with any
+external driver is one line: `emeraldc [-I <dir>]... [--json] [-o OUT] <entry>.rald`.
 
 ## The type system
 
@@ -143,18 +160,26 @@ linking one in.
 Errors come out as structured diagnostics: a stable machine-readable code, a precise
 `file:line:column`, the offending line with a caret, and, for type mismatches, the expected
 and actual types as separate fields. Pass `--json` to any mode and the same diagnostics come
-out as JSON, one object per error. That interface is designed for a tool to consume, read the
-errors, fix the program, and re-run. It is the same decision we made with azul, and it makes
-the compiler a natural target for an agent loop.
+out as JSON, one object per error. The interface is designed for a tool to consume: read the
+errors, fix the program, re-run. That makes the compiler a natural target for an agent
+loop.
 
 ## Where it stands
 
 Phase 1 is done and tested: the compiler, the structural gradual type layer, and the
-collector. Most of Phase 2 landed too: narrowing, literal types, `never`, exhaustiveness
-checking, generics, first-class closures, recursive type aliases, and file and process I/O.
-The remaining candidates are method-call sugar, exceptions with tracebacks, a `dict` type with
-a real method library, and the ambitious one, self-hosting: rewriting the lexer, parser, and
-codegen in Emerald while keeping the C runtime.
+collector. Most of Phase 2 has landed too: narrowing, literal types, `never`, exhaustiveness
+checking, generics, first-class closures, recursive type aliases, file and process I/O, and
+the module system above. The `examples/` directory has grown past snippets: there is a small
+ray tracer, including a typed port, exercised by the e2e suite, and `examples/proofs.rald` is
+still the runnable tour of the proof features.
+
+The roadmap in `docs/research-directions.md` is where the language is headed, and it is
+deliberately aimed at the research threads on this site: shape types so a tensor carries its
+dimensions, an effect system with `pure` so "this model is a function of its inputs" is
+statable, interpretations as first-class typed objects carrying a commuting-square
+obligation, approximate judgments discharged to a bound with a certificate, and typed hooks
+so an interpretability operation is checked rather than string-keyed. Self-hosting,
+exceptions, and a large stdlib are explicitly off the table: they buy the research nothing.
 
 The open question we are actually interested in is how far the type layer can go before the
 "proofs you can run" story stops being honest. The limits documented in `proofs.md` are the

@@ -12,9 +12,7 @@
       {{ $current := . }}
       {{ range site.Menus.main }}
         {{ $active := or ($current.IsMenuCurrent "main" .) ($current.HasMenuCurrent "main" .) }}
-        <a href="{{ .URL | relURL }}"{{ if $active }} aria-current="page"{{ end }}>
-          <span class="link-idx">{{ printf "%02d" (div .Weight 10) }}</span>{{ .Name }}
-        </a>
+        <a href="{{ .URL | relURL }}"{{ if $active }} aria-current="page"{{ end }}>{{ .Name }}</a>
       {{ end }}
     </nav>
 
