@@ -16,6 +16,6 @@ uncertainty.
 
 We build the formal side of that bridge: interpretability claims that are precise enough to
 be wrong and checked mechanically rather than by eye. The research threads below are the
-standing programme. The notes track the systems we are actually building, most recently
+standing programme. The systems we actually build live alongside them — most recently
 Emerald, a typed language with a compiler written in C11 that now spans files, closures, and
 a two-generation garbage collector.

@@ -9,7 +9,6 @@
 
     <div class="hero-actions">
       <a class="btn btn-primary" href="{{ "/research/" | relURL }}">Research programme <span aria-hidden="true">&rarr;</span></a>
-      <a class="btn" href="{{ "/notes/" | relURL }}">Notes</a>
       <a class="btn" href="{{ site.Params.emerald }}" rel="noopener">Emerald on GitHub</a>
     </div>
   </div>
@@ -48,23 +47,5 @@
   </ol>
 </section>
 {{ end }}
-
-{{ $notes := first 4 (where site.RegularPages "Section" "notes").ByDate.Reverse }}
-{{ with $notes }}
-<section class="shell home-notes">
-  <div class="section-head">
-    <h2>Recent notes</h2>
-    <a class="section-more" href="{{ "/notes/" | relURL }}">all notes &rarr;</a>
-  </div>
-  {{ partial "post-list.html" . }}
-</section>
 {{ end }}
 
-<section class="shell home-contact">
-  <div class="contact-panel">
-    <h2>Contact</h2>
-    <p>Email is the best way to reach us. We are happy to discuss the research programme, the notes, or Emerald itself.</p>
-    <p class="contact-line"><a class="btn btn-primary" href="mailto:{{ site.Params.email }}">{{ site.Params.email }}</a></p>
-  </div>
-</section>
-{{ end }}

@@ -19,10 +19,6 @@
 <meta property="og:site_name" content="{{ site.Title }}">
 <meta name="twitter:card" content="summary_large_image">
 
-{{- with .OutputFormats.Get "rss" }}
-<link rel="alternate" type="application/rss+xml" href="{{ .Permalink }}" title="{{ site.Title }}">
-{{- end }}
-
 {{ partial "favicon.html" . }}
 
 <script>

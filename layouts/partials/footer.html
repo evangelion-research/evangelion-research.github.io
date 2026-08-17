@@ -17,9 +17,7 @@
     <div class="footer-col">
       <h2>Contact</h2>
       <ul>
-        {{ with site.Params.email }}<li><a href="mailto:{{ . }}">{{ . }}</a></li>{{ end }}
         {{ with site.Params.github }}<li><a href="{{ . }}" rel="me noopener">GitHub</a></li>{{ end }}
-        {{ with .OutputFormats.Get "rss" }}<li><a href="{{ .Permalink }}">RSS</a></li>{{ end }}
       </ul>
     </div>
   </div>

@@ -12,7 +12,6 @@ first paint.
 content/
   _index.md                  home page thesis
   research/                  standing research threads (one file per thread)
-  notes/                     notes (page bundles; current post: emerald)
 layouts/
   _default/{baseof,list,single}.html
   index.html                 home page
@@ -34,14 +33,6 @@ hugo new content research/my-thread.md
 Front matter used by the layouts: `code` (e.g. `THR-05`), `weight` (ordering), `status`,
 `excerpt`, `methods` (shown as tags), `tags`.
 
-New note (page bundle so images can live next to the text):
-
-```shell
-hugo new content notes/my-note/index.md
-```
-
-Front matter: `date`, `status`, `excerpt`, `tags`, `authors`.
-
 Shortcodes:
 
 ```text
@@ -50,9 +41,6 @@ Shortcodes:
 {{< spec title="Soundness condition" >}}α(f(S)) ⊑ f#(α(S)){{< /spec >}}
 {{< terminal title="shell" >}}hugo server{{< /terminal >}}
 ```
-
-The current note, [notes/emerald](content/notes/emerald/index.md), tracks the Emerald
-language ([github.com/evangelion-research/emerald](https://github.com/evangelion-research/emerald)).
 
 ## Develop
 
