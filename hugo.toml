@@ -44,3 +44,8 @@ term = ["HTML"]
 name = "Research"
 pageRef = "/research"
 weight = 10
+
+[[menu.main]]
+name = "Notes"
+pageRef = "/notes"
+weight = 20

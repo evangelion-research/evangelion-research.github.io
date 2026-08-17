@@ -12,6 +12,7 @@ first paint.
 content/
   _index.md                  home page thesis
   research/                  standing research threads (one file per thread)
+  notes/                     posts about the systems we build (blog-style)
 layouts/
   _default/{baseof,list,single}.html
   index.html                 home page
