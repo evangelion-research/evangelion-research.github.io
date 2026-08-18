@@ -63,3 +63,20 @@ figure.terminal figcaption {
   color: #767676;
   margin-bottom: .25rem;
 }
+
+/* SEELE mark in the sidebar. The source art is white line work on a solid
+   black field; `lighten` blends that field into the sidebar so only the
+   line work shows, without needing a transparent PNG. */
+.sidebar-logo {
+  display: block;
+  width: 100%;
+  max-width: 15rem;
+  height: auto;
+  margin: 0 auto .5rem;
+  mix-blend-mode: lighten;
+}
+
+.sidebar-about a:hover .sidebar-logo,
+.sidebar-about a:focus .sidebar-logo {
+  opacity: .85;
+}

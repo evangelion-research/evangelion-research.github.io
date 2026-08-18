@@ -15,7 +15,7 @@ program in an unusual object language, and interpretability is decompilation und
 uncertainty.
 
 We build the formal side of that bridge: interpretability claims that are precise enough to
-be wrong and checked mechanically rather than by eye. The research threads below are the
-standing programme. The systems we actually build live alongside them — most recently
-Emerald, a typed language with a compiler written in C11 that now spans files, closures, and
-a two-generation garbage collector.
+be wrong and checked mechanically rather than by eye. The notes below are where that
+programme becomes running code and written-down foundations — most recently Emerald, a typed
+language with a compiler written in C11 that now spans files, closures, and a two-generation
+garbage collector.

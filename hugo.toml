@@ -21,18 +21,10 @@ unsafe = true
 startLevel = 2
 endLevel = 3
 
-[permalinks]
-research = "/research/:slug/"
-
 [taxonomies]
 tag = "tags"
 
 [menu]
-[[menu.main]]
-name = "Research"
-pageRef = "/research"
-weight = 10
-
 [[menu.main]]
 name = "Notes"
 pageRef = "/notes"

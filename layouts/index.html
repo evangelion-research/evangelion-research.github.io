@@ -4,7 +4,7 @@
   {{ .Content }}
 </div>
 
-{{ range slice "/research" "/notes" -}}
+{{ range slice "/notes" -}}
   {{ with $.Site.GetPage . -}}
   <h2><a href="{{ .RelPermalink }}">{{ .Title }}</a></h2>
   {{ partial "page-list.html" .Pages }}

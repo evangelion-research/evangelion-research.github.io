@@ -3,45 +3,58 @@
 Hugo site for **Evangelion Research**, a research group studying mechanistic interpretability
 through formal reasoning and programming languages research.
 
-Dark theme by default with a light mode toggle stored in `localStorage` and applied before
-first paint.
+Built on the [Hyde](https://github.com/spf13/hyde) theme (in `themes/hyde/`) with project
+overrides layered on top: a custom sidebar carrying the SEELE mark, a shared post-list
+partial, and `assets/css/custom.css`, which Hyde concatenates into its CSS bundle
+automatically.
 
 ## Structure
 
 ```text
 content/
   _index.md                  home page thesis
-  research/                  standing research threads (one file per thread)
-  notes/                     posts about the systems we build (blog-style)
+  notes/                     posts (blog-style), one file per note
 layouts/
-  _default/{baseof,list,single}.html
-  index.html                 home page
-  partials/                  head, header, footer, mark, post-list, scripts
-  shortcodes/                sidenote, marginnote, spec, terminal
+  index.html                 home page — lists the notes section
+  _default/{list,single}.html
+  partials/
+    sidebar.html             overrides the theme sidebar (logo + nav)
+    page-list.html           title / date / excerpt list, used by index and list
+  shortcodes/{spec,terminal}.html
 assets/
-  css/eva.css                the whole theme
-  js/eva.js                  theme toggle
+  css/custom.css             project tweaks on top of Hyde
+  evangelion-research.png    sidebar logo (processed by Hugo at build time)
+themes/hyde/                 vendored theme
 ```
+
+The site has a single content section, `notes/`. A `research/` section of standing threads
+existed previously and has been removed, along with its navigation entry.
 
 ## Authoring
 
-New research thread:
+New note:
 
 ```shell
-hugo new content research/my-thread.md
+hugo new content notes/my-note.md
 ```
 
-Front matter used by the layouts: `code` (e.g. `THR-05`), `weight` (ordering), `status`,
-`excerpt`, `methods` (shown as tags), `tags`.
+Front matter used by the layouts: `title`, `date`, `status` (shown in the byline),
+`excerpt` (shown in list views), `tags`, `methods` (rendered as a trailing line), and
+`code` (an optional identifier shown in the byline).
 
 Shortcodes:
 
 ```text
-{{< sidenote >}}Margin note with an auto number.{{< /sidenote >}}
-{{< marginnote >}}Margin note without a number.{{< /marginnote >}}
 {{< spec title="Soundness condition" >}}α(f(S)) ⊑ f#(α(S)){{< /spec >}}
 {{< terminal title="shell" >}}hugo server{{< /terminal >}}
 ```
+
+## Logo
+
+`assets/evangelion-research.png` is white line work on a solid black field. The sidebar
+renders it with `mix-blend-mode: lighten`, so the black field blends into the sidebar
+background and only the line work shows — no transparent PNG needed. Replacing the file is
+enough to change the mark; Hugo resizes it at build time.
 
 ## Develop
 
