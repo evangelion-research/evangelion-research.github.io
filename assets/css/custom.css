@@ -1,0 +1,65 @@
+/* Project tweaks on top of Hyde. */
+
+.post-meta {
+  color: #9a9a9a;
+  font-size: 85%;
+  margin-top: -.5rem;
+}
+
+.post-meta a {
+  color: #9a9a9a;
+  text-decoration: underline;
+}
+
+.lead {
+  font-size: 1.1rem;
+  color: #515151;
+}
+
+.posts {
+  list-style: none;
+  padding-left: 0;
+}
+
+.posts li {
+  margin-bottom: 1.5rem;
+}
+
+.posts li a {
+  font-size: 1.15rem;
+  font-weight: bold;
+}
+
+.posts li .post-date {
+  display: inline;
+  margin-left: .4rem;
+  font-size: 85%;
+}
+
+.posts li p {
+  margin: .25rem 0 0;
+  color: #515151;
+}
+
+blockquote.spec {
+  border-left-color: #7a7a7a;
+  color: #313131;
+}
+
+blockquote.spec .spec-title {
+  font-size: 85%;
+  text-transform: uppercase;
+  letter-spacing: .05em;
+  color: #767676;
+  margin-bottom: .5rem;
+}
+
+figure.terminal {
+  margin: 0 0 1rem;
+}
+
+figure.terminal figcaption {
+  font-size: 85%;
+  color: #767676;
+  margin-bottom: .25rem;
+}

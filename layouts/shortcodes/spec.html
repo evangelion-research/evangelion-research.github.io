@@ -1,4 +1,4 @@
-<aside class="spec-block">
+<blockquote class="spec">
   <p class="spec-title">{{ .Get "title" | default "Definition" }}</p>
-  <div class="spec-body">{{ .Inner | markdownify }}</div>
-</aside>
+  {{ .Inner | markdownify }}
+</blockquote>

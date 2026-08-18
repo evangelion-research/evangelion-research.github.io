@@ -1,37 +1,15 @@
-{{ define "main" }}
-<article class="shell article">
-  <header class="page-header note-header">
-    <p class="kicker">
-      {{ with .Params.status }}<span class="status-chip">{{ . }}</span>{{ end }}
-      {{ with .Params.code }}<span class="status-chip alt">{{ . }}</span>{{ end }}
-      {{ if not .Date.IsZero }}<time datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "2006.01.02" }}</time>{{ end }}
-      {{ with .ReadingTime }}<span>&middot; {{ . }} min read</span>{{ end }}
-    </p>
-    <h1>{{ .Title }}</h1>
-    {{ with .Params.excerpt | default .Params.subtitle }}<p class="subtitle">{{ . }}</p>{{ end }}
-    {{ with .Params.authors }}<p class="byline">{{ delimit . ", " ", and " }}</p>{{ end }}
-  </header>
-
-  {{ $toc := .TableOfContents }}
-  {{ if and (ne .Params.toc false) (gt (len $toc) 60) }}
-    <nav class="toc" aria-label="Contents">
-      <p class="toc-title">Contents</p>
-      {{ $toc }}
-    </nav>
-  {{ end }}
-
-  <div class="content">
-    {{ .Content }}
-  </div>
-
-  <footer class="article-footer">
-    {{ with .Params.tags }}
-      <ul class="tag-row">{{ range . }}<li><a href="{{ "/tags/" | relURL }}{{ . | urlize }}/">{{ . }}</a></li>{{ end }}</ul>
-    {{ end }}
-    <div class="article-nav">
-      {{ with .PrevInSection }}<a class="prev" href="{{ .RelPermalink }}"><span>&larr; previous</span>{{ .Title }}</a>{{ end }}
-      {{ with .NextInSection }}<a class="next" href="{{ .RelPermalink }}"><span>next &rarr;</span>{{ .Title }}</a>{{ end }}
-    </div>
-  </footer>
-</article>
-{{ end }}
+{{ define "main" -}}
+<div class="post">
+  <h1>{{ .Title }}</h1>
+  <p class="post-meta">
+    {{ with .Date }}<time datetime="{{ .Format "2006-01-02" }}">{{ .Format "January 2, 2006" }}</time>{{ end }}
+    {{ with .Params.code }} &middot; {{ . }}{{ end }}
+    {{ with .Params.status }} &middot; {{ . }}{{ end }}
+  </p>
+  {{ .Content }}
+  {{ with .Params.methods }}<p class="post-meta">Methods: {{ delimit . ", " }}</p>{{ end }}
+  {{ with .Params.tags }}<p class="post-meta">Tags:
+    {{ range $i, $t := . }}{{ if $i }}, {{ end }}<a href="{{ (urlize (printf "/tags/%s" $t)) | relURL }}">{{ $t }}</a>{{ end }}
+  </p>{{ end }}
+</div>
+{{- end }}

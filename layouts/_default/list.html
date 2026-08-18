@@ -1,33 +1,9 @@
-{{ define "main" }}
-<article class="shell section-page">
-  <header class="page-header">
-    <p class="kicker">{{ site.Params.kicker }}</p>
-    <h1>{{ .Title }}</h1>
-    {{ with .Params.subtitle | default .Params.description }}<p class="subtitle">{{ . }}</p>{{ end }}
-  </header>
+{{ define "main" -}}
+<div class="post">
+  <h1>{{ .Title }}</h1>
+  {{ with .Params.subtitle }}<p class="lead">{{ . }}</p>{{ end }}
+  {{ .Content }}
+</div>
 
-  {{ with .Content }}<div class="content prose-lead">{{ . }}</div>{{ end }}
-
-  {{ $pages := .Pages }}
-  {{ if eq .Section "research" }}
-    {{ with $pages.ByWeight }}
-      <ol class="thread-grid thread-grid-wide">
-        {{ range . }}
-          <li class="thread-card">
-            <a href="{{ .RelPermalink }}">
-              <p class="thread-code">{{ .Params.code | default "THR" }}</p>
-              <h3>{{ .Title }}</h3>
-              <p class="thread-blurb">{{ .Params.excerpt | default .Summary }}</p>
-              {{ with .Params.methods }}<ul class="tag-row">{{ range . }}<li>{{ . }}</li>{{ end }}</ul>{{ end }}
-            </a>
-          </li>
-        {{ end }}
-      </ol>
-    {{ end }}
-  {{ else }}
-    {{ with $pages.ByDate.Reverse }}
-      {{ partial "post-list.html" . }}
-    {{ end }}
-  {{ end }}
-</article>
-{{ end }}
+{{ partial "page-list.html" .Pages }}
+{{- end }}

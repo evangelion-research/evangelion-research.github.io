@@ -1,4 +1,4 @@
-<div class="terminal-block" role="group" aria-label="{{ .Get "title" | default "terminal" }}">
-  <p class="terminal-bar">{{ .Get "title" | default "shell" }}</p>
+<figure class="terminal">
+  <figcaption>{{ .Get "title" | default "shell" }}</figcaption>
   <pre><code>{{ trim .Inner "\n" }}</code></pre>
-</div>
+</figure>

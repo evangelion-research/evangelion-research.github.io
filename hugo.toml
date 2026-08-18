@@ -1,26 +1,20 @@
 baseURL = "https://evangelion-research.github.io/"
 locale = "en-US"
 title = "Evangelion Research"
+theme = "hyde"
 
 enableRobotsTXT = true
-enableGitInfo = false
-summaryLength = 34
+summaryLength = 40
 
 [params]
-description = "Research on mechanistic interpretability through formal reasoning and programming languages."
-kicker = "evangelion-research"
-tagline = "mech interp through formal reasoning."
-motto = "the future is upon us"
-footer = "evangelion research: interpretability, formal reasoning, programming languages."
-github = "https://github.com/evangelion-research"
-emerald = "https://github.com/evangelion-research/emerald"
+description = "Mechanistic interpretability through formal reasoning and programming languages research."
+copyright = "Evangelion Research — interpretability, formal reasoning, programming languages."
 
 [markup]
 [markup.highlight]
 noClasses = false
 lineNos = false
 tabWidth = 2
-[markup.goldmark]
 [markup.goldmark.renderer]
 unsafe = true
 [markup.tableOfContents]
@@ -33,12 +27,6 @@ research = "/research/:slug/"
 [taxonomies]
 tag = "tags"
 
-[outputs]
-home = ["HTML"]
-section = ["HTML"]
-taxonomy = ["HTML"]
-term = ["HTML"]
-
 [menu]
 [[menu.main]]
 name = "Research"
@@ -49,3 +37,8 @@ weight = 10
 name = "Notes"
 pageRef = "/notes"
 weight = 20
+
+[[menu.main]]
+name = "GitHub"
+url = "https://github.com/evangelion-research"
+weight = 30

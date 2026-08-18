@@ -1,51 +1,13 @@
-{{ define "main" }}
-<section class="hero">
-  <div class="shell hero-shell">
-    <p class="kicker hero-kicker">{{ site.Params.kicker }}</p>
+{{ define "main" -}}
+<div class="post">
+  {{ with .Params.subtitle }}<p class="lead">{{ . }}</p>{{ end }}
+  {{ .Content }}
+</div>
 
-    <h1 class="hero-title">{{ .Title }}</h1>
-
-    <p class="hero-lede">{{ .Params.subtitle | default site.Params.tagline }}</p>
-
-    <div class="hero-actions">
-      <a class="btn btn-primary" href="{{ "/research/" | relURL }}">Research programme <span aria-hidden="true">&rarr;</span></a>
-      <a class="btn" href="{{ site.Params.emerald }}" rel="noopener">Emerald on GitHub</a>
-    </div>
-  </div>
-  <div class="hero-glow" aria-hidden="true"></div>
-</section>
-
-<section class="shell home-thesis">
-  <div class="section-head">
-    <h2>Thesis</h2>
-  </div>
-  <div class="content prose-lead">
-    {{ .Content }}
-  </div>
-</section>
-
-{{ $threads := where site.RegularPages "Section" "research" }}
-{{ with $threads.ByWeight }}
-<section class="shell home-threads">
-  <div class="section-head">
-    <h2>Research threads</h2>
-    <a class="section-more" href="{{ "/research/" | relURL }}">all threads &rarr;</a>
-  </div>
-  <ol class="thread-grid">
-    {{ range . }}
-      <li class="thread-card">
-        <a href="{{ .RelPermalink }}">
-          <p class="thread-code">{{ .Params.code | default "THR" }}</p>
-          <h3>{{ .Title }}</h3>
-          <p class="thread-blurb">{{ .Params.excerpt | default .Summary }}</p>
-          {{ with .Params.methods }}
-            <ul class="tag-row">{{ range . }}<li>{{ . }}</li>{{ end }}</ul>
-          {{ end }}
-        </a>
-      </li>
-    {{ end }}
-  </ol>
-</section>
-{{ end }}
-{{ end }}
-
+{{ range slice "/research" "/notes" -}}
+  {{ with $.Site.GetPage . -}}
+  <h2><a href="{{ .RelPermalink }}">{{ .Title }}</a></h2>
+  {{ partial "page-list.html" .Pages }}
+  {{- end }}
+{{- end }}
+{{- end }}
