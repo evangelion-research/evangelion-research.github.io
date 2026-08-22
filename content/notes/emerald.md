@@ -16,6 +16,8 @@ on this site state the programme; what they need is an object language in which
 interpretations are typed objects the compiler validates. No existing language does that, so
 we are building one. It is called **Emerald**.
 
+{{< project-logo src="emerald.gif" alt="Emerald programming language project logo" caption="Emerald — machine-checked interpretation" >}}
+
 ## What exists today
 
 Emerald reached **1.0.0 on 19 August 2026**. It is a Python-shaped language with braces

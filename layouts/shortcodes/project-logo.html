@@ -1,0 +1,9 @@
+{{- $src := .Get "src" -}}
+{{- with resources.Get $src -}}
+<figure class="project-mark">
+  <img src="{{ .RelPermalink }}" width="{{ .Width }}" height="{{ .Height }}" alt="{{ $.Get "alt" }}">
+  {{- with $.Get "caption" }}<figcaption>{{ . }}</figcaption>{{ end -}}
+</figure>
+{{- else -}}
+  {{- errorf "project-logo shortcode could not find asset %q" $src -}}
+{{- end -}}

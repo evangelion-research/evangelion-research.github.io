@@ -1,0 +1,4 @@
+<meta name="theme-color" content="#101014">
+{{- with resources.Get "js/emerald-highlight.js" | minify | fingerprint }}
+<script src="{{ .RelPermalink }}" integrity="{{ .Data.Integrity }}" defer></script>
+{{- end }}
