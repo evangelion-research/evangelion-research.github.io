@@ -1,8 +1,9 @@
 ---
 title: "Emerald: a typed language for machine-checked interpretation"
 date: 2026-08-16
+lastmod: 2026-08-22
 status: "note"
-excerpt: "A Python-shaped, structurally typed language with a compiler written in C11 — built to find out how much of a program's meaning a practical type system can hold, and measured against a proof-carrying ray tracer."
+excerpt: "Emerald 1.0 is a Python-shaped, structurally typed language with proof mode, typed errors, tensors, and a C11 compiler — built to find out how much of a program's meaning a practical type system can hold."
 tags: ["emerald", "programming languages", "type systems", "verification", "mechanistic interpretability"]
 ---
 
@@ -17,11 +18,12 @@ we are building one. It is called **Emerald**.
 
 ## What exists today
 
-Emerald is a Python-shaped language with braces instead of indentation and TypeScript-style
-structural typing instead of classes. The compiler is written in modern C11 and emits native
-binaries through your system `cc`. It is deliberately small: thirteen builtins, no standard
-library yet, no object system. What it has is the type system, and the type system is the
-point.
+Emerald reached **1.0.0 on 19 August 2026**. It is a Python-shaped language with braces
+instead of indentation and TypeScript-style structural typing instead of classes. The
+compiler is written in modern C11 and emits native binaries through your system `cc`. The
+release includes 77 builtins, an eleven-module standard library written in Emerald, typed
+errors, tensors, cooperative tasks, a REPL, and a stricter proof mode. It still has no class
+or object system. What it has is the type system, and the type system is the point.
 
 ```emerald
 type Circle = { kind: "circle", r: int }
@@ -36,17 +38,25 @@ def area(s: Shape) -> int {
 }
 ```
 
-Literal types, unions, generics, flow narrowing, and `never` give the checker enough to
-verify exhaustive case analysis, so extending a data type reopens every site that must be
-updated. Types are erased at runtime — there is no vtable or nominal tag — so structural
-subtyping costs nothing. Functions are values and closures capture enclosing locals by shared,
-mutable cell. A program can span files: `import` resolves against directories, privacy is a
-leading underscore, and the compiler links the whole import graph into one binary, mangling
-each module's names so two packages can both define `parse`.
+Literal types, unions and intersections, generics, flow narrowing, and `never` give the
+checker enough to verify exhaustive case analysis, so extending a data type reopens every
+site that must be updated. Types are erased at runtime — there is no vtable or nominal tag —
+so structural subtyping costs nothing. Fallible functions return `Result[T, E]`: `try`
+propagates a declared error and `catch` must exhaust the error union, without exceptions or
+stack unwinding. Functions are values; closures, lambdas, pipelines, composition, and
+tail-call optimization make up the functional core.
+
+A program can span files: `import` resolves against the importing directory, a project
+`src/`, explicit include paths, and then the standard library. Privacy is a leading
+underscore, and the compiler links the whole import graph into one binary, mangling each
+module's names so two packages can both define `parse`. At runtime, a precise two-generation
+mark-and-sweep collector manages values, while cooperative tasks communicate through typed
+channels whose closed state appears as `T | None`.
 
 The pipeline is observable at every stage — `lexer → parser → modules → type checker → C
-codegen → cc` — and each stage has a driver flag and its own golden test suite, 71 tests
-across five suites. Errors are structured diagnostics with stable machine-readable codes, a
+codegen → cc` — and each stage has a driver flag and golden regression coverage. The suite
+also covers proof obligations, shapes, imports, the standard library, the REPL, warnings,
+benchmarks, and end-to-end behaviour. Errors are structured diagnostics with stable codes, a
 precise location, the offending line with a caret, and for type mismatches the expected and
 actual types as separate fields. `--json` emits the same diagnostics as JSON. The design
 intent is explicit: this output is meant to be fed back to a tool — or an LLM — that repairs
@@ -91,27 +101,24 @@ the untyped one for the brands and the threaded randomness. Determinism is not a
 here; it is the precondition for every claim that a behaviour belongs to the program rather
 than to the noise around it.
 
-## What the scorecard buys
+## From the scorecard to 1.0
 
-The gap analysis in the repo's research directions is written in the same register as the
-scorecard. The blockers are stated plainly: no tensors, so you cannot yet write a neural
-network; no dependent or indexed types, so a type cannot mention a shape, a length, or a
-bound; no induction; no termination checking, so `never` is inhabited by divergence; `any` as
-a universal solvent; unsound covariant lists; no effects or purity, so "this model is a pure
-function of its inputs" is not statable; and no path to real models without a weight loader
-and a graph importer.
+The ray-tracer scorecard became an implementation plan. Several items that were out of reach
+in the first version of this note are now real language features. `Tensor[dtype, shape]`,
+dimension expressions, `Fin[n]`, and `Eq[a, b]` make shape obligations statable and let
+propositional equality justify dimensions across function boundaries. A `pure` annotation is
+part of function types and prevents I/O, randomness, and indirect calls to impure functions.
+Functions are total by default: recursive calls must descend structurally, while code the
+checker cannot prove terminating must declare itself `partial`.
 
-The agenda that follows is ordered by how much of that each track unblocks. Shape types come
-first — named axes, `Fin[n]` indexing, a small solver for size arithmetic — because shapes are
-the practical dependent type and every interesting statement about a network mentions one.
-Then effects and purity, because a commuting-square interpretation is meaningless if the model
-is not a function. Then the part that makes Emerald a *research* language rather than a nicer
-PyTorch: interpretations as first-class typed objects, with the compiler generating the
-obligations — the syntactic map typechecks, the commuting square holds up to a stated error,
-and description length is a computed number so competing interpretations are comparable.
-Approximate judgments bolt the honest epistemology in: an obligation can be discharged
-statically, checked dynamically, estimated statistically to an `(ε, δ)` bound, or consciously
-assumed — with the boundary explicit and a machine-readable certificate as the artifact.
+The boundary is sharpest under `--proof`. Proof mode rejects `any`, `partial`, unsupported
+recursion, and loops without an evident termination argument. It also makes mutable `list[T]`
+invariant; immutable `seq[T]` remains soundly covariant, with `freeze` and `thaw` marking the
+boundary. `--proof-report`, including JSON output, records totals, taint sites, vacuous
+obligations, and covariance warnings. This is not full dependent type theory: scalar
+refinements, opaque constructors, induction, approximate `(ε, δ)` judgments, and
+interpretations as first-class certificate-producing objects remain research work. But the
+old list of missing foundations is no longer the present tense.
 
 The throughline is the same one that runs through every thread on this site:
 
@@ -129,20 +136,23 @@ build how.
 
 ## Status
 
-The language, the compiler, the modules, the diagnostics, the collector, and the experiment
-are all in the repository, with the docs organized as one project told in three registers:
-the language you can use today, the language as an instrument, and where it is going. Building
-it and running the full suite is two commands:
+The 1.0 repository now contains the language, compiler, runtime, standard library,
+diagnostics, proof and shape reports, REPL, examples, benchmark regressions, and the original
+experiment. Building it and running the full suite is two commands:
 
 {{< terminal title="shell" >}}task          # build bin/emeraldc
-task test     # 71 golden tests across 5 stage suites
+task test     # run the complete regression suite
+bin/emeraldc --check --proof examples/proofs.rald
 bin/emeraldc examples/ray_tracer/typed/main.rald -o /tmp/rt && /tmp/rt{{< /terminal >}}
 
-The honest result of the work so far is a single number: six of sixteen propositions about a
-real program are held by a practical type system, seven are not statable, and the seven say
-exactly what to build next. The repository is at
+The original experiment's result remains useful: six of sixteen propositions about a real
+program were held by the initial practical type system, and the missing propositions said
+what to build next. Version 1.0 is the first answer to that list, not the end of it. The
+repository is at
 [github.com/evangelion-research/emerald](https://github.com/evangelion-research/emerald); the
-research agenda lives in
-[`docs/research-directions.md`](https://github.com/evangelion-research/emerald/blob/main/docs/research-directions.md),
-and the scorecard in
+implemented release surface lives in
+[`docs/RELEASE_V1.md`](https://github.com/evangelion-research/emerald/blob/main/docs/RELEASE_V1.md),
+proof mode is documented in
+[`docs/proofs.md`](https://github.com/evangelion-research/emerald/blob/main/docs/proofs.md), and
+the original scorecard remains in
 [`examples/ray_tracer/typed/README.md`](https://github.com/evangelion-research/emerald/blob/main/examples/ray_tracer/typed/README.md).
