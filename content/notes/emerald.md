@@ -156,3 +156,5 @@ proof mode is documented in
 [`docs/proofs.md`](https://github.com/evangelion-research/emerald/blob/main/docs/proofs.md), and
 the original scorecard remains in
 [`examples/ray_tracer/typed/README.md`](https://github.com/evangelion-research/emerald/blob/main/examples/ray_tracer/typed/README.md).
+
+Read more about here : [Tour of Emerald](https://evangelion-research.github.io/toe)
